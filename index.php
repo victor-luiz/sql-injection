@@ -5,6 +5,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $username_mysql = "root";
   $password_mysql = "root";
 
+  $class_css_status_success = "status-login-success";
+  $class_css_status_error = "status-login-error";
+  $class_css_query_sql = "query-sql";
+
   try {
     $conn = new PDO("mysql:host=$servername_mysql;dbname=sqlinjection", $username_mysql, $password_mysql);
     // set the PDO error mode to exception
@@ -13,17 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST["email"];
     $password = $_POST["password"];
     $query = "SELECT email, password FROM usuario WHERE email='$email' AND password = '$password'";
-    echo $query;
+    echo "<div class=$class_css_query_sql>$query</div>";
     $result = $conn->query($query);
     $result->execute();
     $rows = $result->fetch();
     if ($rows) {
-      echo "Logado com sucesso";
+      echo "<div class=$class_css_status_success>Logado com sucesso</div>";
     } else {
-      echo "Não logou. Tente novamente";
+      echo "<div class=$class_css_status_error>Não logou. Tente novamente</div>";
     }
   } catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+    echo "<div class=$class_css_status_error>Connection failed: " . $e->getMessage()."</div>";
   }
 }
 ?>
@@ -40,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap"
       rel="stylesheet"
     />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200;300;500&display=swap" rel="stylesheet"> 
     <title>Login</title>
   </head>
   <body>
@@ -79,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       width: 100%;
       height: 100vh;
       background-color: #121212;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -106,6 +112,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       height: 2.15rem;
       text-align: center;
       margin: 0.35rem 0rem 2rem;
+    }
+
+    .query-sql {
+      font-family: Roboto Mono, roboto, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+      border: solid 1px #757575;
+      border-radius: 6px;
+      font-weight: 300;
+      font-size: 0.875rem;
+      background-color: #2e2e2e;
+      width: auto;
+      padding: 1rem;
+    }
+
+    .status-login-success {
+      background-color: #222329;
+      border: solid 2px #2aa126;
+      width: auto;
+      padding: 1rem;
+      margin-top: 2rem;
+      border-radius: 6px;
+      color: #2aa126;
+    }
+
+    .status-login-error {
+      background-color: #222329;
+      border: solid 2px #d3352a;
+      width: auto;
+      padding: 1rem;
+      margin-top: 2rem;
+      border-radius: 6px;
+      color: #d3352a;
     }
 
     label {
