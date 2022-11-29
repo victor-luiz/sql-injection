@@ -16,10 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $query = "SELECT email, password FROM usuario WHERE email='$email' AND password = '$password'";
+    $query = "SELECT email, password FROM usuario WHERE email = :email AND password = :password";
     echo "<div class=$class_css_query_sql>$query</div>";
-    $result = $conn->query($query);
-    $result->execute();
+    $result = $conn->prepare($query);
+    $result->execute([
+      'email' => $email,
+      'password' => $password
+    ]);
     $rows = $result->fetch();
     if ($rows) {
       echo "<div class=$class_css_status_success>Logado com sucesso</div>";
@@ -196,4 +199,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   }
   </script>
-</html>
+</html>     
